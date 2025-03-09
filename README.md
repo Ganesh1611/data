@@ -106,6 +106,15 @@ The core requirements Ire:
 
 * Link : https://screenrec.com/share/lOYfRNt62Z
 
+File Flow : 
+1. README.MD
+2. Entity relationship diagram
+3. Staging_Table_DDL
+4. copy_data_S3_to_redshift
+5. stage_to_public_schema_load
+6. Staging_schema_to_final_table
+7. Validation
+
 **11. Conclusion**
 
 This challenge alloId us to demonstrate our skills in data modeling, ETL pipeline development, and data quality assurance using AWS Redshift. The implemented solution meets the core requirements of the challenge and provides a solid foundation for further analysis.
