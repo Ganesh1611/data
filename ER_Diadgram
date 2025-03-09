@@ -1,0 +1,110 @@
+ER_Diagram
+    fact_transactions {
+        VARCHAR order_id PK
+        VARCHAR line_id PK
+        VARCHAR type
+        DATETIME dt
+        VARCHAR pos_site_id FK
+        VARCHAR sku_id FK
+        VARCHAR fscldt_id FK
+        VARCHAR price_substate_id FK
+        INT sales_units
+        DECIMAL sales_dollars
+        DECIMAL discount_dollars
+        VARCHAR original_order_id
+        VARCHAR original_line_id
+    }
+    fact_averagecosts {
+        VARCHAR fscldt_id FK 
+        VARCHAR sku_id FK 
+        DECIMAL average_unit_standardcost
+        DECIMAL average_unit_landedcost
+    }
+    hier_clnd {
+        VARCHAR fscldt_id PK
+        VARCHAR fscldt_label
+        VARCHAR fsclwk_id
+        VARCHAR fsclwk_label
+        VARCHAR fsclmth_id
+        VARCHAR fsclmth_label
+        VARCHAR fsclqrtr_id
+        VARCHAR fsclqrtr_label
+        VARCHAR fsclyr_id
+        VARCHAR fsclyr_label
+        VARCHAR ssn_id
+        VARCHAR ssn_label
+        VARCHAR ly_fscldt_id
+        VARCHAR lly_fscldt_id
+        INT fscldow
+        INT fscldom
+        INT fscldoq
+        INT fscldoy
+        INT fsclwoy
+        INT fsclmoy
+        INT fsclqoy
+        DATE date
+    }
+    hier_hldy {
+        VARCHAR hldy_id PK
+        VARCHAR hldy_label
+    }
+    hier_invloc {
+        VARCHAR loc PK
+        VARCHAR loc_label
+        VARCHAR loctype
+        VARCHAR loctype_label
+    }
+    hier_invstatus {
+        VARCHAR code_id PK
+        VARCHAR code_label
+        VARCHAR bckt_id
+        VARCHAR bckt_label
+        VARCHAR ownrshp_id
+        VARCHAR ownrshp_label
+    }
+    hier_possite {
+        VARCHAR site_id PK
+        VARCHAR site_label
+        VARCHAR subchnl_id
+        VARCHAR subchnl_label
+        VARCHAR chnl_id
+        VARCHAR chnl_label
+    }
+    hier_pricestate {
+        VARCHAR substate_id PK
+        VARCHAR substate_label
+        VARCHAR state_id
+        VARCHAR state_label
+    }
+    hier_prod {
+        VARCHAR sku_id PK
+        VARCHAR sku_label
+        VARCHAR stylclr_id
+        VARCHAR stylclr_label
+        VARCHAR styl_id
+        VARCHAR styl_label
+        VARCHAR subcat_id
+        VARCHAR subcat_label
+        VARCHAR cat_id
+        VARCHAR cat_label
+        VARCHAR dept_id
+        VARCHAR dept_label
+        VARCHAR issvc
+        VARCHAR isasmbly
+        VARCHAR isnfs
+    }
+    hier_rtlloc {
+        VARCHAR str PK
+        VARCHAR str_label
+        VARCHAR dstr
+        VARCHAR dstr_label
+        VARCHAR rgn
+        VARCHAR rgn_label
+    }
+
+    fact_transactions ||--o{ hier_clnd : "fscldt_id"
+    fact_transactions ||--o{ hier_possite : "pos_site_id"
+    fact_transactions ||--o{ hier_prod : "sku_id"
+    fact_transactions ||--o{ hier_pricestate : "price_substate_id"
+    fact_averagecosts ||--o{ hier_clnd : "fscldt_id"
+    fact_averagecosts ||--o{ hier_prod : "sku_id"
