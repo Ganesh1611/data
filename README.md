@@ -104,6 +104,8 @@ The core requirements Ire:
 * I explained our approach and the rationale behind our choices.
 * I uploaded the video in a way that it can be played directly within the browser.
 
+* Link : https://screenrec.com/share/lOYfRNt62Z
+
 **11. Conclusion**
 
 This challenge alloId us to demonstrate our skills in data modeling, ETL pipeline development, and data quality assurance using AWS Redshift. The implemented solution meets the core requirements of the challenge and provides a solid foundation for further analysis.
