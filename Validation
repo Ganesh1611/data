@@ -1,0 +1,63 @@
+-- fact_transactions: Check for null values in critical columns
+SELECT COUNT(*) FROM fact_transactions_staging WHERE order_id IS NULL OR line_id IS NULL OR sku_id IS NULL OR fscldt_id IS NULL;
+
+-- hier_prod: Check for null values in primary key
+SELECT COUNT(*) FROM hier_prod_staging WHERE sku_id IS NULL;
+
+
+-- fact_transactions: Check for duplicate primary keys
+SELECT order_id, line_id, COUNT(*) FROM fact_transactions_staging GROUP BY order_id, line_id HAVING COUNT(*) > 1;
+
+-- hier_prod: Check for duplicate primary keys
+SELECT sku_id, COUNT(*) FROM hier_prod_staging GROUP BY sku_id HAVING COUNT(*) > 1;
+
+
+-- Show duplicate rows in fact_transactions_staging
+SELECT *
+FROM fact_transactions_staging
+WHERE (order_id, line_id) IN (
+    SELECT order_id, line_id
+    FROM fact_transactions_staging
+    GROUP BY order_id, line_id
+    HAVING COUNT(*) > 1
+);
+
+-- Show duplicate rows in hier_prod_staging
+SELECT *
+FROM hier_prod_staging
+WHERE sku_id IN (
+    SELECT sku_id
+    FROM hier_prod_staging
+    GROUP BY sku_id
+    HAVING COUNT(*) > 1
+);
+
+
+
+WITH RankedDuplicates AS (
+    SELECT
+        *,
+        ROW_NUMBER() OVER (PARTITION BY order_id, line_id ORDER BY order_id, line_id) AS rn
+    FROM fact_transactions_staging
+)
+DELETE FROM fact_transactions_staging
+WHERE (order_id, line_id) IN (SELECT order_id, line_id FROM RankedDuplicates WHERE rn > 1);
+
+
+
+WITH RankedDuplicates AS (
+    SELECT
+        *,
+        ROW_NUMBER() OVER (PARTITION BY sku_id ORDER BY sku_id) AS rn
+    FROM hier_prod_staging
+)
+DELETE FROM hier_prod_staging
+WHERE sku_id IN (SELECT sku_id FROM RankedDuplicates WHERE rn > 1);
+
+
+
+SELECT COUNT(*)
+FROM fact_transactions_staging ft
+LEFT JOIN hier_prod_staging hp ON ft.sku_id = hp.sku_id
+WHERE hp.sku_id IS NULL;
+
